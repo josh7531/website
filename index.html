@@ -3,27 +3,59 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CV Builder Dashboard</title>
-  <link rel="stylesheet" href="styles.css">
+  <title>Login - CV Builder</title>
+  <link rel="stylesheet" href="login.css">
+  <!-- Firebase SDK -->
+  <script type="module">
+    // Import Firebase
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-auth.js";
+
+    // ✅ Replace with your Firebase config
+    const firebaseConfig = {
+  apiKey: "AIzaSyCaLdt-kJ5eMDQAEhk0c2_sAvB3Lcu28a8",
+  authDomain: "ats-friendly-e0edf.firebaseapp.com",
+  projectId: "ats-friendly-e0edf",
+  storageBucket: "ats-friendly-e0edf.firebasestorage.app",
+  messagingSenderId: "237104021981",
+  appId: "1:237104021981:web:66566105366fa0670d7634"
+};
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    // Login function
+    window.login = function () {
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+      const message = document.getElementById("message");
+
+      signInWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+          // Redirect after login
+          window.location.href = 'Users/dashboard.html';
+        })
+        .catch((error) => {
+          if (error.code === "auth/user-not-found" || error.code === "auth/wrong-password") {
+            message.innerText = "❌ Email or password is incorrect";
+          } else if (error.code === "auth/invalid-email") {
+            message.innerText = "❌ Invalid email format";
+          } else {
+            message.innerText = "❌ " + error.message;
+          }
+        });
+    }
+  </script>
 </head>
 <body>
-  <div class="dashboard">
-    <!-- Sidebar -->
-    <aside class="sidebar">
-      <h2>CV. Builder</h2>
-      <nav>
-        <a href="Dashboard.html">Dashboard</a>
-        <a href="Templategallery.html">Template Gallery</a>
-        <a href="Documents.html">Documents</a>
-        <a href="Websites.html">Websites</a>
-        <a href="Jobs.html">Jobs</a>
-      </nav>
-      <div class="profile-card">
-        <img src="https://via.placeholder.com/50" alt="Profile">
-        <p>Complete your profile!</p>
-        <button>Complete Now</button>
-      </div>
-    </aside>
+  <div class="login-container">
+    <div class="login-box">
+      <h2>Login</h2>
+      <input type="email" id="email" placeholder="Email" required>
+      <input type="password" id="password" placeholder="Password" required>
+      <button onclick="login()">Login</button>
+      <p id="message"></p>
+      <p>Don’t have an account? <a href="signup.html">Sign Up</a></p>
+    </div>
   </div>
 </body>
 </html>
